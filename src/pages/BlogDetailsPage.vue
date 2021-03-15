@@ -25,17 +25,19 @@
               v-model="state.blog.body"
             />
           </div>
-          <button class="btn btn-info" type="submit" v-if="state.blog.creator">
+          <div v-if="state.blog.creator">
+          <button class="btn btn-info" type="submit" v-if="state.blog.creator.email == state.user.email">
             Post Changes
           </button>
+          </div>
         </form>
       </div>
     </div>
     <div class="row">
       <div class="col-4 card">
         <div class="card-body">
-          <h4 class="card-title">
-            {{ state.blog.title }} <i class="fas fa-times text-danger action" @click="deleteBlog"></i>
+          <h4 class="card-title" v-if="state.creator">
+            {{ state.blog.title }} <i class="fas fa-times text-danger action" @click="deleteBlog" v-if="state.blog.creator.email == state.user.email"></i>
           </h4>
           <p class="card-text">
             {{ state.blog.body }}

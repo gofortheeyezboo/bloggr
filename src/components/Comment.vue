@@ -1,7 +1,7 @@
 <template>
   <div class="Comment">
-    <ul>
-      <li>{{ comment.body }} <i class="fas fa-times text-danger action" @click="deleteComment"></i></li>
+    <ul v-if="comment.creator">
+      <li>{{ comment.body }} <i class="fas fa-times text-danger action" @click="deleteComment" v-if="comment.creator.email == state.user.email"></i></li>
       <li>User: {{ comment.creator.email }}</li>
     </ul>
   </div>
