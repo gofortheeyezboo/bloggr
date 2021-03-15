@@ -1,7 +1,7 @@
-<template>
+ <template>
   <div class="container">
     <div class="row mt-2">
-      <div class="col-12">
+      <div class="col-12" v-if="state.user.isAuthenticated">
         <form class="form-inline" @submit.prevent="createBlog">
           <div class="form-group">
             <input
@@ -50,6 +50,7 @@ export default {
     const router = useRouter()
     const state = reactive({
       blogs: computed(() => AppState.blogs),
+      user: computed(() => AppState.user),
       newBlog: {}
     })
     onMounted(() => {

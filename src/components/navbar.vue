@@ -22,6 +22,11 @@
             Home
           </router-link>
         </li>
+        <li>
+          <router-link :to="{ name: 'Account' }" class="nav-link">
+            Account
+          </router-link>
+        </li>
       </ul>
       <span class="navbar-text">
         <button

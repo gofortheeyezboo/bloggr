@@ -6,7 +6,7 @@
           {{ blog.title }}
         </h4>
         <p class="card-text">
-          {{ blog.body }}
+          {{ blog.creator ? blog.creator.email : "NoUserEmail" }}
         </p>
       </div>
     </router-link>
@@ -14,13 +14,25 @@
 </template>
 
 <script>
+import { computed, reactive } from 'vue'
+import { AppState } from '../AppState'
+import { blogsService } from '../services/BlogsService'
+
 export default {
   name: 'Blog',
   props: {
-    blog: Object
+    blog: { type: Object, required: true }
   },
-  setup() {
-    return {}
+  setup(props) {
+    const state = reactive({
+      user: computed(() => AppState.user)
+    })
+    return {
+      state,
+      deleteBlog() {
+        blogsService.deleteBlog(props.blog.id)
+      }
+    }
   },
   components: {}
 }

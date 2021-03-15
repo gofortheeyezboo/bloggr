@@ -2,10 +2,7 @@
   <div class="blog-details container">
     <div class="row">
       <div class="col">
-        <button type="button" class="btn btn-outline-danger" @click="deleteBlog">
-          Delete Blog
-        </button>
-        <form class="form-inline" onsubmit="app.blogsController.createBlog(event)">
+        <form class="form-inline" @submit.prevent="editBlog">
           <div class="form-group">
             <input
               type="text"
@@ -28,21 +25,44 @@
               v-model="state.blog.body"
             />
           </div>
-          <button class="btn btn-info" type="submit">
-            Create
+          <button class="btn btn-info" type="submit" v-if="state.blog.creator">
+            Post Changes
           </button>
         </form>
       </div>
     </div>
     <div class="row">
-      <div class="card-body">
-        <h4 class="card-title">
-          {{ state.blog.title }}
-        </h4>
-        <p class="card-text">
-          {{ state.blog.body }}
-        </p>
+      <div class="col-4 card">
+        <div class="card-body">
+          <h4 class="card-title">
+            {{ state.blog.title }} <i class="fas fa-times text-danger action" @click="deleteBlog"></i>
+          </h4>
+          <p class="card-text">
+            {{ state.blog.body }}
+          </p>
+          <h5>Comments:</h5>
+          <Comment v-for="commentData in state.comments" :key="commentData._id" :comment="commentData">
+          </comment>
+          <form class="form-inline" @submit.prevent="createComment">
+            <div class="form-group">
+              <input
+                type="text"
+                name="body"
+                id="body"
+                class="form-control"
+                placeholder="Comment Here..."
+                aria-describedby="helpId"
+                v-model="state.newComment.body"
+              />
+            </div>
+            <button class="btn btn-info mt-1" type="submit" v-if="state.blog.creator">
+              Post Comment
+            </button>
+          </form>
+        </div>
       </div>
+    </div>
+    <div class="col">
     </div>
   </div>
 </template>
@@ -59,10 +79,14 @@ export default {
     const router = useRouter()
     const route = useRoute()
     const state = reactive({
-      blog: computed(() => AppState.activeBlog)
+      blog: computed(() => AppState.activeBlog),
+      user: computed(() => AppState.user),
+      comments: computed(() => AppState.comments),
+      newComment: {}
     })
-    onMounted(() => {
-      blogsService.getBlog(route.params.id)
+    onMounted(async() => {
+      await blogsService.getBlog(route.params.id)
+      await blogsService.getComments(route.params.id)
     })
 
     onBeforeRouteLeave((to, from, next) => {
@@ -77,6 +101,14 @@ export default {
       async deleteBlog() {
         await blogsService.deleteBlog(state.blog.id)
         router.push({ name: 'Home' })
+      },
+      async editBlog() {
+        await blogsService.editBlog(state.blog.id, state.blog)
+        router.push({ name: 'Home' })
+      },
+      async createComment() {
+        await blogsService.createComment({ blog: state.blog.id, body: state.newComment.body })
+        state.newComment = {}
       }
     }
   },
