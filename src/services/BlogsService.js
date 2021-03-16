@@ -12,13 +12,14 @@ class BlogsService {
     }
   }
 
-  // async getUserBlogs() {
-  //   try {
-  //     const res = await api.get
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
+  async getUserBlogs() {
+    try {
+      const res = await api.get('account/blogs')
+      AppState.userBlogs = res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   async getBlogs() {
     try {

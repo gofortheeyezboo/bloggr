@@ -36,7 +36,7 @@
     <div class="row">
       <div class="col-4 card">
         <div class="card-body">
-          <h4 class="card-title" v-if="state.creator">
+          <h4 class="card-title" v-if="state.blog.creator">
             {{ state.blog.title }} <i class="fas fa-times text-danger action" @click="deleteBlog" v-if="state.blog.creator.email == state.user.email"></i>
           </h4>
           <p class="card-text">
